@@ -1,6 +1,7 @@
 import {format, formatDistanceToNow} from "date-fns";
 import {Comment} from "./Comment";
 import styles from "./Post.module.css";
+import {Avatar} from "./Avatar";
 
 export function Post({author, publishedAt, content}) {
   const publishedDateFormatted = format(publishedAt, "do LLLL yyyy',' HH:mm");
@@ -14,7 +15,7 @@ export function Post({author, publishedAt, content}) {
     <article className={styles.post}>
       <header className={styles.header}>
         <div className={styles.author}>
-          <img className={styles.avatar} src={author.avatarUrl} />
+          <Avatar src={author.avatarUrl} />
 
           <div className={styles.authorInfo}>
             <strong>{author.name}</strong>

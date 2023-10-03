@@ -2,14 +2,30 @@ import {format, formatDistanceToNow} from "date-fns";
 import {Comment} from "./Comment";
 import styles from "./Post.module.css";
 import {Avatar} from "./Avatar";
+import {useState} from "react";
 
 export function Post({author, publishedAt, content}) {
+  const [comments, setComments] = useState(["Great post!"]);
+  const [newCommentText, setNewCommentText] = useState("");
+
   const publishedDateFormatted = format(publishedAt, "do LLLL yyyy',' HH:mm");
 
   const publishedDateRelativeToNow = formatDistanceToNow(publishedAt, {
     includeSeconds: true,
     addSuffix: true,
   });
+
+  function handleCreateNewComment(event) {
+    event.preventDefault();
+
+    setComments([...comments, newCommentText]);
+
+    setNewCommentText("");
+  }
+
+  function handleNewCommentChange(event) {
+    setNewCommentText(event.target.value);
+  }
 
   return (
     <article className={styles.post}>
@@ -45,10 +61,18 @@ export function Post({author, publishedAt, content}) {
         })}
       </div>
 
-      <form className={styles.commentForm}>
+      <form
+        className={styles.commentForm}
+        onSubmit={(event) => handleCreateNewComment(event)}
+      >
         <strong>Leave your feedback</strong>
 
-        <textarea placeholder="Leave a comment" />
+        <textarea
+          name="comment"
+          placeholder="Leave a comment"
+          value={newCommentText}
+          onChange={(event) => handleNewCommentChange(event)}
+        />
 
         <footer>
           <button type="submit">Publish</button>
@@ -56,9 +80,9 @@ export function Post({author, publishedAt, content}) {
       </form>
 
       <div className={styles.commentList}>
-        <Comment />
-        <Comment />
-        <Comment />
+        {comments.map((comment, index) => {
+          return <Comment key={index} content={comment} />;
+        })}
       </div>
     </article>
   );

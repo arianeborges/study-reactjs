@@ -51,10 +51,10 @@ function App() {
         <Sidebar />
 
         <main>
-          {posts.map((post, index) => {
+          {posts.map((post) => {
             return (
               <Post
-                key={index}
+                key={post.id}
                 author={post.author}
                 content={post.content}
                 publishedAt={post.publishedAt}

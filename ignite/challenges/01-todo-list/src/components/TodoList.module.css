@@ -1,3 +1,10 @@
+.mainWrapper {
+  max-width: 46rem;
+  margin: 0 auto;
+  padding: 0 1rem;
+  margin-top: calc(0px - 3.315rem + 26.5px);
+}
+
 .inputWrapper {
   display: flex;
   flex-direction: row;
@@ -11,7 +18,7 @@
   border: 1px solid var(--gray-700);
   color: var(--gray-100);
 
-  width: 40rem;
+  flex: 1;
 }
 
 .button {

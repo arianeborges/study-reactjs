@@ -11,6 +11,19 @@ export function TaskList() {
           <PlusCircle weight="bold" size={16} />
         </button>
       </div>
+
+      <div className={styles.mainContent}>
+        <div className={styles.mainContentHeader}>
+          <div className={styles.headerInfoLeft}>
+            <p>Created tasks</p>
+            <span>0</span>
+          </div>
+          <div className={styles.headerInfoRight}>
+            <p>Completed</p>
+            <span>0</span>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

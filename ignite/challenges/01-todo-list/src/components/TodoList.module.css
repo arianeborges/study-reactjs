@@ -46,3 +46,49 @@
 .button:hover {
   opacity: 0.8;
 }
+
+.mainContent {
+  margin-top: 4rem;
+}
+
+.mainContentHeader {
+  flex-direction: row;
+  display: flex;
+  justify-content: space-between;
+
+  margin-bottom: 1.5rem;
+}
+
+.headerInfoLeft,
+.headerInfoRight {
+  flex-direction: row;
+  display: flex;
+  align-items: center;
+}
+
+.headerInfoLeft p {
+  color: var(--blue);
+  font-size: 0.875rem;
+  font-weight: bold;
+
+  margin-right: 0.5rem;
+}
+
+.headerInfoRight p {
+  color: var(--purple);
+  font-size: 0.875rem;
+  font-weight: bold;
+
+  margin-right: 0.5rem;
+}
+
+.headerInfoLeft span,
+.headerInfoRight span {
+  background: var(--gray-400);
+  color: var(--gray-200);
+  padding: 2px 8px;
+  font-size: 0.75rem;
+  font-weight: bold;
+  text-align: center;
+  border-radius: 999px;
+}

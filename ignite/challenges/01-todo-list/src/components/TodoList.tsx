@@ -1,4 +1,4 @@
-import {PlusCircle} from "@phosphor-icons/react";
+import {ClipboardText, PlusCircle} from "@phosphor-icons/react";
 import styles from "./TodoList.module.css";
 
 export function TaskList() {
@@ -21,6 +21,16 @@ export function TaskList() {
           <div className={styles.headerInfoRight}>
             <p>Completed</p>
             <span>0</span>
+          </div>
+        </div>
+
+        <div className={styles.taskList}>
+          <div className={styles.emptyTaskList}>
+            <ClipboardText size={64} />
+            <span>
+              <p>You still don't have any tasks registered</p>
+              <p>Create tasks and organize your to-dos</p>
+            </span>
           </div>
         </div>
       </div>

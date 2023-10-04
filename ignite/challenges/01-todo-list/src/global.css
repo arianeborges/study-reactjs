@@ -21,6 +21,11 @@
   box-sizing: border-box;
 }
 
+:focus {
+  outline: transparent;
+  box-shadow: 0 0 0 1px var(--purple-dark);
+}
+
 body {
   background: var(--gray-600);
   -webkit-font-smoothing: antialiased;

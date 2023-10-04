@@ -1,0 +1,6 @@
+.mainWrapper {
+  justify-content: center;
+  display: flex;
+
+  margin-top: calc(0px - 2rem + 6px);
+}

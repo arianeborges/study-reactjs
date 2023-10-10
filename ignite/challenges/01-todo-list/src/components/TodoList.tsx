@@ -9,7 +9,6 @@ interface Todo {
 }
 
 export function TaskList() {
-  const [isChecked, setIsChecked] = useState(false);
   const [countCompletedTask, setCountCompletedTask] = useState(0);
   const [todoValue, setTodoValue] = useState("");
   const [arrayToDo, setArrayToDo] = useState<Todo[]>([
@@ -60,8 +59,6 @@ export function TaskList() {
         itemToComplete = {...item};
       }
 
-      setIsChecked(itemToComplete.isComplete);
-
       return itemToComplete;
     });
 
@@ -109,7 +106,7 @@ export function TaskList() {
                   <div className={styles.itemContent}>
                     <input
                       type="checkbox"
-                      checked={isChecked}
+                      checked={todo.isComplete}
                       onChange={() => handleCheckItem(todo.id)}
                     />
                     <label>{todo.text}</label>

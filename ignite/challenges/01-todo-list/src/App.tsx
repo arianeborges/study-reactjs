@@ -1,6 +1,6 @@
 import "./global.css";
 import {Header} from "./components/Header";
-import {TaskList} from "./components/TodoList";
+import {TaskList} from "./components/TaskList";
 
 function App() {
   return (

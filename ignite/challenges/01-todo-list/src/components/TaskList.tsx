@@ -1,9 +1,11 @@
-import {PlusCircle, Trash} from "@phosphor-icons/react";
-import styles from "./TodoList.module.css";
+import {PlusCircle} from "@phosphor-icons/react";
+import styles from "./TaskList.module.css";
 import {ChangeEvent, FormEvent, useState} from "react";
 import {v4 as uuidv4} from "uuid";
 import {EmptyTodo} from "./EmptyTodo";
-interface Todo {
+import {Todo} from "./Todo";
+
+export interface ITodo {
   id: string;
   text: string;
   isComplete: boolean;
@@ -12,11 +14,11 @@ interface Todo {
 export function TaskList() {
   const [countCompletedTask, setCountCompletedTask] = useState(0);
   const [todoValue, setTodoValue] = useState("");
-  const [arrayToDo, setArrayToDo] = useState<Todo[]>([
+  const [arrayToDo, setArrayToDo] = useState<ITodo[]>([
     {id: uuidv4(), text: "Study Javascript", isComplete: false},
   ]);
 
-  function calculateCompletedCountItems(array: Todo[]) {
+  function calculateCompletedCountItems(array: ITodo[]) {
     return array.filter((item) => item.isComplete).length;
   }
 
@@ -27,7 +29,7 @@ export function TaskList() {
   function handleCreateNewTodo(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
-    const formatTodoValue: Todo = {
+    const formatTodoValue: ITodo = {
       id: uuidv4(),
       text: todoValue,
       isComplete: false,
@@ -38,7 +40,7 @@ export function TaskList() {
     setTodoValue("");
   }
 
-  function handleDeleteTodo(idToDelete: string) {
+  function deleteItem(idToDelete: string) {
     const itemToDelete = arrayToDo.filter((item) => item.id !== idToDelete);
 
     setArrayToDo(itemToDelete);
@@ -47,7 +49,7 @@ export function TaskList() {
     setCountCompletedTask(completedCount);
   }
 
-  function handleCheckItem(idToComplete: string) {
+  function checkItem(idToComplete: string) {
     const updateArrayTodo = arrayToDo.map((item) =>
       item.id === idToComplete ? {...item, isComplete: !item.isComplete} : item
     );
@@ -94,25 +96,13 @@ export function TaskList() {
         <div>
           {arrayToDo.length ? (
             <div>
-              {arrayToDo.map((todo, index) => (
-                <div key={index} className={styles.itemContainer}>
-                  <div className={styles.itemContent}>
-                    <input
-                      type="checkbox"
-                      checked={todo.isComplete}
-                      onChange={() => handleCheckItem(todo.id)}
-                    />
-                    <label>{todo.text}</label>
-                  </div>
-                  <div className={styles.itemDelete}>
-                    <button
-                      title="Delete task"
-                      onClick={() => handleDeleteTodo(todo.id)}
-                    >
-                      <Trash size={24} />
-                    </button>
-                  </div>
-                </div>
+              {arrayToDo.map((todo) => (
+                <Todo
+                  key={todo.id}
+                  todo={todo}
+                  onCheckItem={checkItem}
+                  onDeleteItem={deleteItem}
+                />
               ))}
             </div>
           ) : (

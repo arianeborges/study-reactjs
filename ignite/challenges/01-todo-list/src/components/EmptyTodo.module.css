@@ -1,0 +1,22 @@
+.emptyTodoContainer {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  padding-top: 4rem;
+  border-top: 1px solid var(--gray-400);
+  border-radius: 8px;
+}
+
+.emptyTodoContainer svg {
+  color: var(--gray-400);
+  margin-bottom: 1rem;
+}
+
+.emptyTodoContainer span p {
+  color: var(--gray-300);
+  text-align: center;
+}
+
+.emptyTodoContainer span p:first-child {
+  font-weight: bold;
+}

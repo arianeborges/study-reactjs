@@ -1,7 +1,8 @@
-import {ClipboardText, PlusCircle, Trash} from "@phosphor-icons/react";
+import {PlusCircle, Trash} from "@phosphor-icons/react";
 import styles from "./TodoList.module.css";
 import {ChangeEvent, FormEvent, useState} from "react";
 import {v4 as uuidv4} from "uuid";
+import {EmptyTodo} from "./EmptyTodo";
 interface Todo {
   id: string;
   text: string;
@@ -90,7 +91,7 @@ export function TaskList() {
           </div>
         </div>
 
-        <div className={styles.taskList}>
+        <div>
           {arrayToDo.length ? (
             <div>
               {arrayToDo.map((todo, index) => (
@@ -115,13 +116,7 @@ export function TaskList() {
               ))}
             </div>
           ) : (
-            <div className={styles.emptyTaskList}>
-              <ClipboardText size={64} />
-              <span>
-                <p>You still don't have any tasks registered</p>
-                <p>Create tasks and organize your to-dos</p>
-              </span>
-            </div>
+            <EmptyTodo />
           )}
         </div>
       </div>

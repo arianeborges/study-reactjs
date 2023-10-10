@@ -137,6 +137,8 @@
   flex-direction: row;
   display: flex;
   align-items: flex-start;
+
+  margin-right: 0.75rem;
 }
 
 .itemContent input[type="checkbox"] {
@@ -148,10 +150,18 @@
   font-weight: normal;
   color: var(--gray-100);
 
+  text-align: justify;
+
   display: flex;
 }
 
-.itemContainer svg {
+.itemDelete button {
+  border: 0;
+  background: transparent;
+  padding: 0;
+  cursor: pointer;
+}
+
+.itemDelete button svg {
   color: var(--gray-300);
-  margin-left: 0.75rem;
 }

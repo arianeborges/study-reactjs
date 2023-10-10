@@ -1,11 +1,17 @@
 import {ClipboardText, PlusCircle, Trash} from "@phosphor-icons/react";
 import styles from "./TodoList.module.css";
 import {ChangeEvent, FormEvent, useState} from "react";
+import {v4 as uuidv4} from "uuid";
+interface Todo {
+  id: string;
+  text: string;
+  isComplete: boolean;
+}
 
 export function TaskList() {
   const [todoValue, setTodoValue] = useState("");
-  const [arrayToDo, setArrayToDo] = useState([
-    "Lorem ipsum dolor sit amet consectetur adipisicing elit. Delectus eius perferendis numquam minima corporis dolorum similique, vero quod odio inventore molestias voluptatem ut, error reprehenderit. Necessitatibus perspiciatis facilis molestiae autem",
+  const [arrayToDo, setArrayToDo] = useState<Todo[]>([
+    {id: uuidv4(), text: "Study Javascript", isComplete: false},
   ]);
 
   function handleTodoChange(event: ChangeEvent<HTMLInputElement>) {
@@ -15,9 +21,21 @@ export function TaskList() {
   function handleCreateNewTodo(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
-    setArrayToDo([...arrayToDo, todoValue]);
+    const formatTodoValue: Todo = {
+      id: uuidv4(),
+      text: todoValue,
+      isComplete: false,
+    };
+
+    setArrayToDo([...arrayToDo, formatTodoValue]);
 
     setTodoValue("");
+  }
+
+  function handleDeleteTodo(idToDelete: string) {
+    const itemToDelete = arrayToDo.filter((item) => item.id !== idToDelete);
+
+    setArrayToDo(itemToDelete);
   }
 
   return (
@@ -58,10 +76,15 @@ export function TaskList() {
                 <div key={index} className={styles.itemContainer}>
                   <div className={styles.itemContent}>
                     <input type="checkbox" />
-                    <label>{todo}</label>
+                    <label>{todo.text}</label>
                   </div>
-                  <div>
-                    <Trash size={24} />
+                  <div className={styles.itemDelete}>
+                    <button
+                      title="Delete comment"
+                      onClick={() => handleDeleteTodo(todo.id)}
+                    >
+                      <Trash size={24} />
+                    </button>
                   </div>
                 </div>
               ))}

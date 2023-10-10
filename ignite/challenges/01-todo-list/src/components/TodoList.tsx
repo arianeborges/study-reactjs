@@ -15,6 +15,10 @@ export function TaskList() {
     {id: uuidv4(), text: "Study Javascript", isComplete: false},
   ]);
 
+  function calculateCompletedCountItems(array: Todo[]) {
+    return array.filter((item) => item.isComplete).length;
+  }
+
   function handleTodoChange(event: ChangeEvent<HTMLInputElement>) {
     setTodoValue(event.target.value);
   }
@@ -37,6 +41,9 @@ export function TaskList() {
     const itemToDelete = arrayToDo.filter((item) => item.id !== idToDelete);
 
     setArrayToDo(itemToDelete);
+
+    const completedCount = calculateCompletedCountItems(itemToDelete);
+    setCountCompletedTask(completedCount);
   }
 
   function handleCheckItem(idToComplete: string) {
@@ -45,6 +52,9 @@ export function TaskList() {
     );
 
     setArrayToDo(updateArrayTodo);
+
+    const completedCount = calculateCompletedCountItems(updateArrayTodo);
+    setCountCompletedTask(completedCount);
   }
 
   return (

@@ -40,29 +40,11 @@ export function TaskList() {
   }
 
   function handleCheckItem(idToComplete: string) {
-    const newArrayTodo = arrayToDo.map((item) => {
-      let itemToComplete: Todo = {
-        id: "",
-        text: "",
-        isComplete: false,
-      };
+    const updateArrayTodo = arrayToDo.map((item) =>
+      item.id === idToComplete ? {...item, isComplete: !item.isComplete} : item
+    );
 
-      if (item.id === idToComplete) {
-        if (!item.isComplete) {
-          setCountCompletedTask(countCompletedTask + 1);
-        } else {
-          setCountCompletedTask(countCompletedTask - 1);
-        }
-
-        itemToComplete = {...item, isComplete: !item.isComplete};
-      } else {
-        itemToComplete = {...item};
-      }
-
-      return itemToComplete;
-    });
-
-    setArrayToDo(newArrayTodo);
+    setArrayToDo(updateArrayTodo);
   }
 
   return (

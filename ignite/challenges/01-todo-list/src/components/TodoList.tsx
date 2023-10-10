@@ -9,6 +9,8 @@ interface Todo {
 }
 
 export function TaskList() {
+  const [isChecked, setIsChecked] = useState(false);
+  const [countCompletedTask, setCountCompletedTask] = useState(0);
   const [todoValue, setTodoValue] = useState("");
   const [arrayToDo, setArrayToDo] = useState<Todo[]>([
     {id: uuidv4(), text: "Study Javascript", isComplete: false},
@@ -38,6 +40,34 @@ export function TaskList() {
     setArrayToDo(itemToDelete);
   }
 
+  function handleCheckItem(idToComplete: string) {
+    const newArrayTodo = arrayToDo.map((item) => {
+      let itemToComplete: Todo = {
+        id: "",
+        text: "",
+        isComplete: false,
+      };
+
+      if (item.id === idToComplete) {
+        if (!item.isComplete) {
+          setCountCompletedTask(countCompletedTask + 1);
+        } else {
+          setCountCompletedTask(countCompletedTask - 1);
+        }
+
+        itemToComplete = {...item, isComplete: !item.isComplete};
+      } else {
+        itemToComplete = {...item};
+      }
+
+      setIsChecked(itemToComplete.isComplete);
+
+      return itemToComplete;
+    });
+
+    setArrayToDo(newArrayTodo);
+  }
+
   return (
     <div className={styles.mainWrapper}>
       <form
@@ -65,7 +95,9 @@ export function TaskList() {
           </div>
           <div className={styles.headerInfoRight}>
             <p>Completed</p>
-            <span>0 of {arrayToDo.length}</span>
+            <span>
+              {countCompletedTask} of {arrayToDo.length}
+            </span>
           </div>
         </div>
 
@@ -75,12 +107,16 @@ export function TaskList() {
               {arrayToDo.map((todo, index) => (
                 <div key={index} className={styles.itemContainer}>
                   <div className={styles.itemContent}>
-                    <input type="checkbox" />
+                    <input
+                      type="checkbox"
+                      checked={isChecked}
+                      onChange={() => handleCheckItem(todo.id)}
+                    />
                     <label>{todo.text}</label>
                   </div>
                   <div className={styles.itemDelete}>
                     <button
-                      title="Delete comment"
+                      title="Delete task"
                       onClick={() => handleDeleteTodo(todo.id)}
                     >
                       <Trash size={24} />

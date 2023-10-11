@@ -60,6 +60,12 @@ export function TaskList() {
     setCountCompletedTask(completedCount);
   }
 
+  const sortedTodos = arrayToDo.slice().sort((a, b) => {
+    if (a.isComplete && !b.isComplete) return 1;
+    if (!a.isComplete && b.isComplete) return -1;
+    return 0;
+  });
+
   return (
     <div className={styles.mainWrapper}>
       <form
@@ -96,7 +102,7 @@ export function TaskList() {
         <div>
           {arrayToDo.length ? (
             <div>
-              {arrayToDo.map((todo) => (
+              {sortedTodos.map((todo) => (
                 <Todo
                   key={todo.id}
                   todo={todo}

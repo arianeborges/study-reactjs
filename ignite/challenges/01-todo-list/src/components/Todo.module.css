@@ -22,6 +22,39 @@
 
 .itemContent input[type="checkbox"] {
   margin-right: 1rem;
+
+  -webkit-appearance: none;
+  background: transparent;
+  border: 1px solid var(--blue);
+
+  width: 1rem;
+  height: 1rem;
+
+  border-radius: 8px;
+
+  display: inline-block;
+  position: relative;
+}
+
+.itemContent input[type="checkbox"]:checked:after {
+  content: "\2713";
+  left: 1px;
+  top: -2px;
+
+  position: absolute;
+
+  font-size: 14px;
+}
+
+.itemContent input[type="checkbox"]:checked {
+  background: var(--purple-dark);
+  border: 1px solid var(--purple-dark);
+  color: var(--gray-100);
+}
+
+.itemContent input[type="checkbox"]:checked + label {
+  text-decoration: line-through;
+  color: var(--gray-300);
 }
 
 .itemContent label {

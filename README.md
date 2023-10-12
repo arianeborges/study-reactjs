@@ -2,7 +2,7 @@
 
 #### Projects in class
 
-* [Ignite Feed](https://github.com/arianeborges/study-reactjs/tree/main/ignite/lessons/01-reactjs-ts)
+* [Ignite Feed](https://github.com/arianeborges/study-reactjs/tree/main/ignite/lessons/01-reactjs-ts) -> Built in ReactJS, HTML/CSS, Javascript and Typescript
 
 #### Challenges using ReactJS
 

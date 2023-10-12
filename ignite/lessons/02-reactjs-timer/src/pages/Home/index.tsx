@@ -9,9 +9,18 @@ import {
   TaskInput,
 } from './styles'
 import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import * as zod from 'zod'
+
+const formValidationSchema = zod.object({
+  task: zod.string().min(1),
+  minutesAmount: zod.number().min(5).max(60),
+})
 
 export function Home() {
-  const { register, handleSubmit, watch } = useForm()
+  const { register, handleSubmit, watch } = useForm({
+    resolver: zodResolver(formValidationSchema),
+  })
 
   function handleFormSubmit(data: any) { }
 

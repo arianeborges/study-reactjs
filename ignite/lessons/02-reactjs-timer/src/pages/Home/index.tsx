@@ -33,8 +33,6 @@ export function Home() {
   const [activeTimerId, setActiveTimerId] = useState<string | null>(null)
   const [amountSecondsPassed, setAmountSecondsPassed] = useState(0)
 
-  const activeTimer = timerList.find((timer) => timer.id === activeTimerId)
-
   const { register, handleSubmit, watch, reset } = useForm<TimerFormData>({
     resolver: zodResolver(formValidationSchema),
     defaultValues: {
@@ -43,13 +41,20 @@ export function Home() {
     },
   })
 
+  const activeTimer = timerList.find((timer) => timer.id === activeTimerId)
+
   useEffect(() => {
+    let interval: number
     if (activeTimer) {
-      setInterval(() => {
+      interval = setInterval(() => {
         setAmountSecondsPassed(
           differenceInSeconds(new Date(), activeTimer.startDate),
         )
       }, 1000)
+    }
+
+    return () => {
+      clearInterval(interval)
     }
   }, [activeTimer])
 
@@ -65,6 +70,7 @@ export function Home() {
     // setTimerList((state) => [...state, newTimer])
     setTimerList([...timerList, newTimer])
     setActiveTimerId(id)
+    setAmountSecondsPassed(0)
 
     reset()
   }
@@ -77,6 +83,12 @@ export function Home() {
 
   const minutes = String(minutesAmount).padStart(2, '0')
   const seconds = String(secondsAmount).padStart(2, '0')
+
+  useEffect(() => {
+    if (activeTimer) {
+      document.title = `${minutes}:${seconds}`
+    }
+  }, [activeTimer, minutes, seconds])
 
   const task = watch('task')
   const isSubmitDisabled = !task

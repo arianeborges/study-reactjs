@@ -11,6 +11,7 @@ import {
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as zod from 'zod'
+import { useState } from 'react'
 
 const formValidationSchema = zod.object({
   task: zod.string().min(1),
@@ -19,7 +20,16 @@ const formValidationSchema = zod.object({
 
 type TimerFormData = zod.infer<typeof formValidationSchema>
 
+interface Timer {
+  id: string
+  task: string
+  minutesAmount: number
+}
+
 export function Home() {
+  const [timerList, setTimerList] = useState<Timer[]>([])
+  const [activeTimerId, setActiveTimerId] = useState<string | null>(null)
+
   const { register, handleSubmit, watch, reset } = useForm<TimerFormData>({
     resolver: zodResolver(formValidationSchema),
     defaultValues: {
@@ -29,9 +39,21 @@ export function Home() {
   })
 
   function handleFormSubmit(data: TimerFormData) {
-    console.log(data)
+    const id = String(new Date().getTime())
+
+    const newTimer: Timer = {
+      id,
+      task: data.task,
+      minutesAmount: data.minutesAmount,
+    }
+    // setTimerList((state) => [...state, newTimer])
+    setTimerList([...timerList, newTimer])
+    setActiveTimerId(id)
+
     reset()
   }
+
+  const activeTimer = timerList.find((timer) => timer.id === activeTimerId)
 
   const task = watch('task')
   const isSubmitDisabled = !task

@@ -20,7 +20,7 @@ const formValidationSchema = zod.object({
 type TimerFormData = zod.infer<typeof formValidationSchema>
 
 export function Home() {
-  const { register, handleSubmit, watch } = useForm<TimerFormData>({
+  const { register, handleSubmit, watch, reset } = useForm<TimerFormData>({
     resolver: zodResolver(formValidationSchema),
     defaultValues: {
       task: '',
@@ -30,6 +30,7 @@ export function Home() {
 
   function handleFormSubmit(data: TimerFormData) {
     console.log(data)
+    reset()
   }
 
   const task = watch('task')

@@ -83,8 +83,8 @@ export function Home() {
 
   return (
     <HomeContainer>
-      <form action="">
-        <FormContainer onSubmit={handleSubmit(handleFormSubmit)}>
+      <form onSubmit={handleSubmit(handleFormSubmit)}>
+        <FormContainer>
           <label htmlFor="task">Working on</label>
           <TaskInput
             placeholder="Give a name to your project"

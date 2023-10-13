@@ -28,6 +28,7 @@ interface Timer {
   minutesAmount: number
   startDate: Date
   stoppedDate?: Date
+  finishDate?: Date
 }
 
 export function Home() {
@@ -45,20 +46,47 @@ export function Home() {
 
   const activeTimer = timerList.find((timer) => timer.id === activeTimerId)
 
+  const totalSeconds = activeTimer ? activeTimer.minutesAmount * 60 : 0
+  const currentSeconds = activeTimer ? totalSeconds - amountSecondsPassed : 0
+
+  const minutesAmount = Math.floor(currentSeconds / 60)
+  const secondsAmount = currentSeconds % 60
+
+  const minutes = String(minutesAmount).padStart(2, '0')
+  const seconds = String(secondsAmount).padStart(2, '0')
+
   useEffect(() => {
     let interval: number
     if (activeTimer) {
       interval = setInterval(() => {
-        setAmountSecondsPassed(
-          differenceInSeconds(new Date(), activeTimer.startDate),
+        const resultOfDifferenceInSeconds = differenceInSeconds(
+          new Date(),
+          activeTimer.startDate,
         )
+
+        if (resultOfDifferenceInSeconds >= totalSeconds) {
+          setTimerList((state) =>
+            state.map((timer) => {
+              if (timer.id === activeTimerId) {
+                return { ...timer, finishDate: new Date() }
+              } else {
+                return timer
+              }
+            }),
+          )
+          setAmountSecondsPassed(totalSeconds)
+          setActiveTimerId(null)
+          clearInterval(interval)
+        } else {
+          setAmountSecondsPassed(resultOfDifferenceInSeconds)
+        }
       }, 1000)
     }
 
     return () => {
       clearInterval(interval)
     }
-  }, [activeTimer])
+  }, [activeTimer, activeTimerId, totalSeconds])
 
   function handleFormSubmit(data: TimerFormData) {
     const id = String(new Date().getTime())
@@ -78,8 +106,8 @@ export function Home() {
   }
 
   function handleStopTimer() {
-    setTimerList(
-      timerList.map((timer) => {
+    setTimerList((state) =>
+      state.map((timer) => {
         if (timer.id === activeTimerId) {
           return { ...timer, stoppedDate: new Date() }
         } else {
@@ -90,15 +118,6 @@ export function Home() {
 
     setActiveTimerId(null)
   }
-
-  const totalSeconds = activeTimer ? activeTimer.minutesAmount * 60 : 0
-  const currentSeconds = activeTimer ? totalSeconds - amountSecondsPassed : 0
-
-  const minutesAmount = Math.floor(currentSeconds / 60)
-  const secondsAmount = currentSeconds % 60
-
-  const minutes = String(minutesAmount).padStart(2, '0')
-  const seconds = String(secondsAmount).padStart(2, '0')
 
   useEffect(() => {
     if (activeTimer) {
@@ -111,7 +130,6 @@ export function Home() {
   const task = watch('task')
   const isSubmitDisabled = !task
 
-  console.log(timerList)
   return (
     <HomeContainer>
       <form onSubmit={handleSubmit(handleFormSubmit)}>

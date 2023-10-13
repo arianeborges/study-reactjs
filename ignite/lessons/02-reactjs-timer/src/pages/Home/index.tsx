@@ -17,10 +17,7 @@ const formValidationSchema = zod.object({
   minutesAmount: zod.number().min(5).max(60),
 })
 
-interface TimerFormData {
-  task: string
-  minutesAmount: number
-}
+type TimerFormData = zod.infer<typeof formValidationSchema>
 
 export function Home() {
   const { register, handleSubmit, watch } = useForm<TimerFormData>({

@@ -1,4 +1,4 @@
-import { Play } from '@phosphor-icons/react'
+import { HandPalm, Play } from '@phosphor-icons/react'
 import {
   CountdownContainer,
   FormContainer,
@@ -6,6 +6,7 @@ import {
   MinutesAmountInput,
   Separator,
   StartCountdownButton,
+  StopCountdownButton,
   TaskInput,
 } from './styles'
 import { useForm } from 'react-hook-form'
@@ -26,6 +27,7 @@ interface Timer {
   task: string
   minutesAmount: number
   startDate: Date
+  stoppedDate?: Date
 }
 
 export function Home() {
@@ -75,6 +77,20 @@ export function Home() {
     reset()
   }
 
+  function handleStopTimer() {
+    setTimerList(
+      timerList.map((timer) => {
+        if (timer.id === activeTimerId) {
+          return { ...timer, stoppedDate: new Date() }
+        } else {
+          return timer
+        }
+      }),
+    )
+
+    setActiveTimerId(null)
+  }
+
   const totalSeconds = activeTimer ? activeTimer.minutesAmount * 60 : 0
   const currentSeconds = activeTimer ? totalSeconds - amountSecondsPassed : 0
 
@@ -87,12 +103,15 @@ export function Home() {
   useEffect(() => {
     if (activeTimer) {
       document.title = `${minutes}:${seconds}`
+    } else {
+      document.title = 'Timer'
     }
   }, [activeTimer, minutes, seconds])
 
   const task = watch('task')
   const isSubmitDisabled = !task
 
+  console.log(timerList)
   return (
     <HomeContainer>
       <form onSubmit={handleSubmit(handleFormSubmit)}>
@@ -103,6 +122,7 @@ export function Home() {
             type="text"
             id="task"
             list="task-suggestions"
+            disabled={!!activeTimer}
             {...register('task')}
           />
 
@@ -120,6 +140,7 @@ export function Home() {
             step={5}
             min={5}
             max={60}
+            disabled={!!activeTimer}
             {...register('minutesAmount', { valueAsNumber: true })}
           />
 
@@ -134,10 +155,17 @@ export function Home() {
           <span>{seconds[1]}</span>
         </CountdownContainer>
 
-        <StartCountdownButton disabled={isSubmitDisabled} type="submit">
-          <Play size={24} />
-          Start
-        </StartCountdownButton>
+        {activeTimer ? (
+          <StopCountdownButton type="button" onClick={handleStopTimer}>
+            <HandPalm size={24} />
+            Stop
+          </StopCountdownButton>
+        ) : (
+          <StartCountdownButton disabled={isSubmitDisabled} type="submit">
+            <Play size={24} />
+            Start
+          </StartCountdownButton>
+        )}
       </form>
     </HomeContainer>
   )

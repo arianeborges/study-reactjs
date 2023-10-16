@@ -12,8 +12,9 @@ import {
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as zod from 'zod'
-import { useEffect, useState } from 'react'
+import { createContext, useEffect, useState } from 'react'
 import { differenceInSeconds } from 'date-fns'
+import { Countdown } from './components/Countdown'
 
 const formValidationSchema = zod.object({
   task: zod.string().min(1),
@@ -31,10 +32,18 @@ interface Timer {
   finishDate?: Date
 }
 
+interface TimerContextType {
+  activeTimer: Timer | undefined
+  activeTimerId: string | null
+  markCurrentTimerAsFinished: () => void
+  resetActiveTimerId: () => void
+}
+
+export const TimerContext = createContext({} as TimerContextType)
+
 export function Home() {
   const [timerList, setTimerList] = useState<Timer[]>([])
   const [activeTimerId, setActiveTimerId] = useState<string | null>(null)
-  const [amountSecondsPassed, setAmountSecondsPassed] = useState(0)
 
   const { register, handleSubmit, watch, reset } = useForm<TimerFormData>({
     resolver: zodResolver(formValidationSchema),
@@ -45,48 +54,6 @@ export function Home() {
   })
 
   const activeTimer = timerList.find((timer) => timer.id === activeTimerId)
-
-  const totalSeconds = activeTimer ? activeTimer.minutesAmount * 60 : 0
-  const currentSeconds = activeTimer ? totalSeconds - amountSecondsPassed : 0
-
-  const minutesAmount = Math.floor(currentSeconds / 60)
-  const secondsAmount = currentSeconds % 60
-
-  const minutes = String(minutesAmount).padStart(2, '0')
-  const seconds = String(secondsAmount).padStart(2, '0')
-
-  useEffect(() => {
-    let interval: number
-    if (activeTimer) {
-      interval = setInterval(() => {
-        const resultOfDifferenceInSeconds = differenceInSeconds(
-          new Date(),
-          activeTimer.startDate,
-        )
-
-        if (resultOfDifferenceInSeconds >= totalSeconds) {
-          setTimerList((state) =>
-            state.map((timer) => {
-              if (timer.id === activeTimerId) {
-                return { ...timer, finishDate: new Date() }
-              } else {
-                return timer
-              }
-            }),
-          )
-          setAmountSecondsPassed(totalSeconds)
-          setActiveTimerId(null)
-          clearInterval(interval)
-        } else {
-          setAmountSecondsPassed(resultOfDifferenceInSeconds)
-        }
-      }, 1000)
-    }
-
-    return () => {
-      clearInterval(interval)
-    }
-  }, [activeTimer, activeTimerId, totalSeconds])
 
   function handleFormSubmit(data: TimerFormData) {
     const id = String(new Date().getTime())
@@ -100,7 +67,7 @@ export function Home() {
     // setTimerList((state) => [...state, newTimer])
     setTimerList([...timerList, newTimer])
     setActiveTimerId(id)
-    setAmountSecondsPassed(0)
+    // setAmountSecondsPassed(0)
 
     reset()
   }
@@ -119,13 +86,21 @@ export function Home() {
     setActiveTimerId(null)
   }
 
-  useEffect(() => {
-    if (activeTimer) {
-      document.title = `${minutes}:${seconds}`
-    } else {
-      document.title = 'Timer'
-    }
-  }, [activeTimer, minutes, seconds])
+  function markCurrentTimerAsFinished() {
+    setTimerList((state) =>
+      state.map((timer) => {
+        if (timer.id === activeTimerId) {
+          return { ...timer, finishDate: new Date() }
+        } else {
+          return timer
+        }
+      }),
+    )
+  }
+
+  function resetActiveTimerId() {
+    setActiveTimerId(null)
+  }
 
   const task = watch('task')
   const isSubmitDisabled = !task
@@ -165,13 +140,16 @@ export function Home() {
           <span>minutes.</span>
         </FormContainer>
 
-        <CountdownContainer>
-          <span>{minutes[0]}</span>
-          <span>{minutes[1]}</span>
-          <Separator>:</Separator>
-          <span>{seconds[0]}</span>
-          <span>{seconds[1]}</span>
-        </CountdownContainer>
+        <TimerContext.Provider
+          value={{
+            activeTimer,
+            activeTimerId,
+            markCurrentTimerAsFinished,
+            resetActiveTimerId,
+          }}
+        >
+          <Countdown />
+        </TimerContext.Provider>
 
         {activeTimer ? (
           <StopCountdownButton type="button" onClick={handleStopTimer}>
